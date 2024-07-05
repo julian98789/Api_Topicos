@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.domain.*;
+import com.example.demo.domain.topicos.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +17,14 @@ import java.net.URI;
 
 @RestController // Indica que esta clase es un controlador REST
 @RequestMapping("/topicos")
+@Tag(name = "Medico", description = "Controlador para la gestión de topicos")
 public class ControladorTopicos {
 
     @Autowired
     private TopicosRepositorio topicosRepositorio;
 
     @PostMapping
+    @Operation(summary = "Registrar un nuevo topico", description = "Registra un nuevo topico en la base de datos y devuelve la información del topico registrado.")
     public ResponseEntity<DatosRespuestaTopicos> resgistrarTopicos(
             @RequestBody @Valid DatosRegistroTopicos datosRegistroTopicos,
     UriComponentsBuilder uriComponentsBuilder){
@@ -41,6 +45,7 @@ public class ControladorTopicos {
     }
 
     @GetMapping
+    @Operation(summary = "Obtener lista de topicos activos", description = "Devuelve una lista paginada de todos los topicos que están activos.")
     public ResponseEntity<Page<ListaDatosTopicos>> medicalList(
             @PageableDefault(size = 2) Pageable paginacion) {
 
@@ -50,6 +55,7 @@ public class ControladorTopicos {
 
     @PutMapping // Define que este método maneja las solicitudes PUT a /medico
     @Transactional
+    @Operation(summary = "Actualizar datos de un topico", description = "Actualiza la información de un topico existente en la base de datos.")
     public ResponseEntity<DatosRespuestaTopicos> actualizarTopicos(
             @RequestBody @Valid ActualizarDatosTopicos actualizarDatosTopicos){
 
@@ -69,6 +75,7 @@ public class ControladorTopicos {
 
     @DeleteMapping("/{id}") // Define que este método maneja las solicitudes DELETE a /medico/{id}
     @Transactional
+    @Operation(summary = "Desactivar un topico", description = "Desactiva lógicamente un topico por su ID.")
     public ResponseEntity<Void> eliminarTopicos(@PathVariable Long id) {
 
         Topicos topicos = topicosRepositorio.getReferenceById(id);
